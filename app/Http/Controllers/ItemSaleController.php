@@ -3,82 +3,75 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\ItemSale;
 
 class ItemSaleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+     public function update(Request $request, $id)
+    {
+        $request->validate([
+            'item_code' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
+            'item_name' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
+            'quantity' => 'required|numeric',
+            'expired_date' => 'required|date',
+        ]);
+
+        $item = ItemSale::findOrFail($id);
+        $item->update($request->all());
+
+        return redirect()->route('items.index')->with('success', 'Cập nhật thành công!');
+    }
+
+    // Hiển thị danh sách Item Sale
     public function index()
     {
-        //
+        return view('itemsale.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    // Hiển thị form tạo mới
     public function create()
     {
-        //
+        return view('itemsale.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    // Xử lý khi nhấn "Lưu" form thêm mới
+ 
+        public function store(Request $request)
+{
+    $request->validate([
+        'item_code' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
+        'item_name' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
+        'quantity' => 'required|numeric',
+        'expired_date' => 'required|date',
+    ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    ItemSale::create($request->all());
+
+    return redirect()->route('items.index')->with('success', 'Thêm sản phẩm thành công!');
+}
+
+        // xử lý lưu vào database sau này
+
+
+    // Hiển thị form sửa
+    public function edit($id)
+{
+    $item = ItemSale::findOrFail($id);
+    return view('itemsale.edit', compact('item'));
+}
+
+    // Xử lý khi cập nhật
+
+    // Xem chi tiết
     public function show($id)
     {
-        //
+        return view('itemsale.show');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Xóa
     public function destroy($id)
     {
-        //
+        // xử lý xóa
     }
 }
